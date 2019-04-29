@@ -1,8 +1,8 @@
 {
   "name": "@digitaloptgroup/cms",
-  "version": "0.0.1-pre-release.4",
+  "version": "0.0.1-pre-release.1",
   "description": "Javascript library for Digital Optimization Group's Headless A/B Testing CMS",
-  "repository": "https://github.com/DigitalOptGroup/cms.git",
+  "repository": "https://github.com/DigitalOptimizationGroup/cms.git",
   "main": "./lib/index.js",
   "scripts": {
     "test": "jest --watch",
