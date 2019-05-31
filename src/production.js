@@ -1,8 +1,13 @@
 import { of, fromEvent } from "rxjs";
 import { ajax } from "rxjs/ajax";
 import { map, take, switchMap, catchError, retryWhen } from "rxjs/operators";
-import stableStringify from "fast-stable-stringify";
-import sha1 from "sha1";
+
+export const argsToString = args => {
+  Object.keys(args)
+    .map(key => `${key}_${object[key]}`)
+    .sort()
+    .join(".");
+};
 
 export const connect = ({ apiUrl, apikey, fallbackUrl, vid }) => {
   // new cache for this instantiation
@@ -10,10 +15,10 @@ export const connect = ({ apiUrl, apikey, fallbackUrl, vid }) => {
   // and then we can load data in the service worker... ultimately.
   const cache = window.__APP_CACHE__ || {};
   return ({ queryName, args }) => {
-    const featureId = `${queryName}_${sha1(stableStringify(args))}`;
+    const cacheId = `${queryName}_${argsToString(args)}`;
 
-    return cache[featureId]
-      ? of(cache[featureId])
+    return cache[cacheId]
+      ? of(cache[cacheId])
       : ajax({
           // trying api on same domain
           // ${SERVER_URL}
@@ -46,7 +51,7 @@ export const connect = ({ apiUrl, apikey, fallbackUrl, vid }) => {
           }),
           take(1),
           map(({ response }) => {
-            cache[featureId] = response;
+            cache[cacheId] = response;
             return response;
           })
         );

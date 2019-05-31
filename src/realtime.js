@@ -1,8 +1,7 @@
 import { webSocket } from "rxjs/webSocket";
 import { timer, fromEvent } from "rxjs";
 import { share, pluck, switchMap, retryWhen, tap } from "rxjs/operators";
-import stableStringify from "fast-stable-stringify";
-import sha1 from "sha1";
+import { argsToString } from "./production";
 
 export const connect = ({
   realtimeUrl = "wss://realtime.digitaloptgroup.com"
@@ -17,13 +16,14 @@ export const connect = ({
   const subject = webSocket(`${realtimeUrl}?token=${token}`);
 
   const subscribeToFeature = (queryName, args = {}) => {
-    const featureId = `${queryName}_${sha1(stableStringify(args))}`;
-    if (cache[featureId] === undefined) {
-      cache[featureId] = subject
+    const cacheId = `${queryName}_${argsToString(args)}`;
+
+    if (cache[cacheId] === undefined) {
+      cache[cacheId] = subject
         .multiplex(
-          () => ({ action: "subscribe", featureId }),
-          () => ({ action: "unsubscribe", featureId }),
-          message => message.featureId === featureId
+          () => ({ action: "subscribe", queryName, args }),
+          () => ({ action: "unsubscribe", queryName, args }),
+          message => message.cacheId === cacheId
         )
         .pipe(
           retryWhen(error$ => {
@@ -50,7 +50,7 @@ export const connect = ({
           share()
         );
     }
-    return cache[featureId];
+    return cache[cacheId];
   };
 
   return ({ queryName, args }) => {
