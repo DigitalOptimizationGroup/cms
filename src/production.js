@@ -14,6 +14,7 @@ export const connect = ({ apiUrl, apikey, fallbackUrl, vid }) => {
   // really we should use some browser storage for the cache,
   // and then we can load data in the service worker... ultimately.
   const cache = window.__APP_CACHE__ || {};
+  const fallbackCache = window.__FALLBACK_APP_CACHE__ || {};
   return ({ queryName, args }) => {
     const cacheId = `${queryName}_${argsToString(args)}`;
 
@@ -43,17 +44,29 @@ export const connect = ({ apiUrl, apikey, fallbackUrl, vid }) => {
               })
             )
           ),
-          catchError(e => {
-            return ajax({
-              url: fallbackUrl,
-              crossDomain: true
-            }).pipe(transforming());
-          }),
-          take(1),
           map(({ response }) => {
+            // we only save real responses into the cache
             cache[cacheId] = response;
             return response;
-          })
+          }),
+          catchError(e => {
+            // log this error to dog
+            // check for already fetched fallback JSON
+            if (fallbackCache[cacheId]) {
+              return of(fallbackCache[cacheId]);
+            } else {
+              return ajax({
+                url: fallbackUrl,
+                crossDomain: true
+              }).pipe(
+                map(({ response }) => {
+                  fallbackCache = response;
+                  return fallbackCache[cacheId];
+                })
+              );
+            }
+          }),
+          take(1)
         );
   };
 };

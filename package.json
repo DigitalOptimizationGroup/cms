@@ -1,6 +1,6 @@
 {
   "name": "@digitaloptgroup/cms",
-  "version": "0.0.1-pre-release.09",
+  "version": "0.0.1-pre-release.10",
   "description": "Javascript library for Digital Optimization Group's Headless A/B Testing CMS",
   "repository": "https://github.com/DigitalOptimizationGroup/cms.git",
   "main": "dist/commonjs/index.js",
@@ -8,7 +8,7 @@
   "scripts": {
     "test": "jest --watch",
     "build": "rimraf dist && rollup -c",
-    "watch": "babel src -d lib --watch --verbose;"
+    "watch": "rollup -c -w"
   },
   "author": "Digital Optimization Group LLC",
   "license": "MIT",

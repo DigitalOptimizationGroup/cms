@@ -23,7 +23,10 @@ export const connect = ({
         .multiplex(
           () => ({ action: "subscribe", queryName, args }),
           () => ({ action: "unsubscribe", queryName, args }),
-          message => message.cacheId === cacheId
+          ({ queryName, args }) => {
+            // this filters the reponses so our multiplex subscriber only gets what they need
+            return `${queryName}_${argsToString(args)}` === cacheId;
+          }
         )
         .pipe(
           retryWhen(error$ => {
