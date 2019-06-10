@@ -49,8 +49,8 @@ export const connect = ({
               // do logging
             }
           }),
-          pluck("feature"),
-          share()
+          pluck("feature")
+          // share()
         );
     }
     return cache[cacheId];

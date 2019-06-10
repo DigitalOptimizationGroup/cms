@@ -3,8 +3,8 @@ import { ajax } from "rxjs/ajax";
 import { map, take, switchMap, catchError, retryWhen } from "rxjs/operators";
 
 export const argsToString = args => {
-  Object.keys(args)
-    .map(key => `${key}_${object[key]}`)
+  return Object.keys(args)
+    .map(key => `${key}_${args[key]}`)
     .sort()
     .join(".");
 };
