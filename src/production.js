@@ -24,9 +24,9 @@ export const connect = ({ apiUrl, apikey, fallbackUrl, vid }) => {
           // trying api on same domain
           // ${SERVER_URL}
           // need to send user-id here or allow cookie?
-          url: `${apiUrl}/resolve-feature/${queryName}?apikey=${apikey}&vid=${vid}&args=${encodeURIComponent(
+          url: `${apiUrl}/resolve-feature/${queryName}?args=${encodeURIComponent(
             JSON.stringify(args)
-          )}`,
+          )}&userId=${vid}&apikey=${apikey}`,
           crossDomain: true
           //   headers: {
           //       "x-api-key": apiKey
