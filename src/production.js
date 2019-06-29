@@ -14,7 +14,7 @@ export const connect = ({ apiUrl, apikey, fallbackUrl, vid }) => {
   // really we should use some browser storage for the cache,
   // and then we can load data in the service worker... ultimately.
   const cache = window.__APP_CACHE__ || {};
-  const fallbackCache = window.__FALLBACK_APP_CACHE__ || {};
+  var fallbackCache = window.__FALLBACK_APP_CACHE__ || {};
   return ({ queryName, args }) => {
     const cacheId = `${queryName}_${argsToString(args)}`;
 

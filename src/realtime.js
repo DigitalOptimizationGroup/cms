@@ -1,7 +1,6 @@
 import { webSocket } from "rxjs/webSocket";
 import { timer, fromEvent } from "rxjs";
 import {
-  share,
   pluck,
   switchMap,
   retryWhen,
@@ -45,7 +44,7 @@ export const internalInit = token => ({
           tap({
             next: x => {
               if (process.env.NODE_ENV !== "production") {
-                console.log("From server", x);
+                // console.log("From server", x);
               }
             },
             complete() {
