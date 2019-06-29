@@ -21,17 +21,10 @@ export const connect = ({ apiUrl, apikey, fallbackUrl, vid }) => {
     return cache[cacheId]
       ? of(cache[cacheId])
       : ajax({
-          // trying api on same domain
-          // ${SERVER_URL}
-          // need to send user-id here or allow cookie?
           url: `${apiUrl}/resolve-feature/${queryName}?args=${encodeURIComponent(
             JSON.stringify(args)
           )}&userId=${vid}&apikey=${apikey}`,
           crossDomain: true
-          //   headers: {
-          //       "x-api-key": apiKey
-          //   },
-          // createXHR: () => new XMLHttpRequest() // is this needed?
         }).pipe(
           retryWhen(error$ =>
             error$.pipe(
@@ -54,6 +47,8 @@ export const connect = ({ apiUrl, apikey, fallbackUrl, vid }) => {
             // check for already fetched fallback JSON
             if (fallbackCache[cacheId]) {
               return of(fallbackCache[cacheId]);
+            } else if (e.status === 404) {
+              throw e;
             } else {
               return ajax({
                 url: fallbackUrl,
