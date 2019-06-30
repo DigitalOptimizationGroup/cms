@@ -2,7 +2,7 @@ import { connect as production } from "./production";
 import { internalInit as realtime } from "./realtime";
 
 let selectedResolver;
-console.log("HELLO");
+
 const LOGIN_TOKEN_PARAM_NAME = "dog_realtime_token";
 
 // URLSearchParams is only used for realtime mode, it's not
