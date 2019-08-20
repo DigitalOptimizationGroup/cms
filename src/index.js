@@ -1,14 +1,24 @@
 import { connect as production } from "./production";
 import { internalInit as realtime } from "./realtime";
+import { connect as ssr } from "./ssr";
 
 let selectedResolver;
 
+console.log("DEV CMS VERSION");
+
 const LOGIN_TOKEN_PARAM_NAME = "dog_realtime_token";
+
+if (typeof self !== "undefined" && typeof window === "undefined") {
+  selectedResolver = ssr;
+}
 
 // URLSearchParams is only used for realtime mode, it's not
 // supported by IE 11, but realtime mode is only for development
 // and the Editor requires a modern browser
-if (window.URLSearchParams) {
+else if (
+  typeof window !== "undefined" &&
+  typeof URLSearchParams === "function"
+) {
   // get paramters from URL
   const urlParams = new URLSearchParams(window.location.search);
 
