@@ -4,7 +4,7 @@ import { connect as ssr } from "./ssr";
 
 let selectedResolver;
 
-console.log("DEV CMS VERSION");
+console.log("DEV CMS VERSION - v01");
 
 const LOGIN_TOKEN_PARAM_NAME = "dog_realtime_token";
 
@@ -54,9 +54,7 @@ else if (
       }
     } else if (token !== null) {
       console.warn(
-        `You are in Realtime Preview mode of Digital Optimization Group's CMS Editor. Click here to logout: ${
-          window.location.href
-        }?dog_log_out_reatime=yes`
+        `You are in Realtime Preview mode of Digital Optimization Group's CMS Editor. Click here to logout: ${window.location.href}?dog_log_out_reatime=yes`
       );
       selectedResolver = realtime(token);
     } else {
