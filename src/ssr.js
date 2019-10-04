@@ -1,14 +1,15 @@
 import { of } from "rxjs";
 import { argsToString } from "./production";
 
-export const connect = ({ vid, ssrCache = {}, resolver }) => {
+export const connect = ({ vid }) => {
   return ({ queryName, args }) => {
     const cacheId = `${queryName}_${argsToString(args)}`;
-
-    if (!ssrCache[cacheId]) {
-      ssrCache[cacheId] = resolver({ userId: vid, queryName, args });
-    }
-    return of(ssrCache[cacheId]);
+    const result = __DOG_WORKER__.cacheResolver(cacheId, {
+      userId: vid,
+      queryName,
+      args
+    });
+    return of(result);
   };
 };
 

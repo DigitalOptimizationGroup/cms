@@ -4,11 +4,9 @@ import { connect as ssr } from "./ssr";
 
 let selectedResolver;
 
-console.log("DEV CMS VERSION - v01");
-
 const LOGIN_TOKEN_PARAM_NAME = "dog_realtime_token";
 
-if (typeof self !== "undefined" && typeof window === "undefined") {
+if (typeof __DOG_WORKER__ !== "undefined") {
   selectedResolver = ssr;
 }
 
@@ -66,3 +64,15 @@ else if (
 }
 
 export const connect = selectedResolver;
+
+export const isEdge = typeof __DOG_WORKER__ !== "undefined";
+
+export function registerRenderer(renderer) {
+  if (!isEdge) {
+    throw new Error(
+      "registerRenderer should only be called when isEdge is true (when rendering at the Edge.)"
+    );
+  }
+
+  __DOG_WORKER__.render = renderer;
+}

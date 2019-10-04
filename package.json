@@ -33,7 +33,11 @@
     "mock-socket": "^8.0.5",
     "rimraf": "^2.6.3",
     "rollup": "^1.12.5",
-    "rollup-plugin-babel": "^4.3.2"
+    "rollup-plugin-babel": "^4.3.2",
+    "ts-loader": "^5.3.3",
+    "tslint": "^5.11.0",
+    "typescript": "^3.4.2",
+    "rollup-plugin-typescript2": "^0.21.1"
   },
   "sideEffects": false,
   "files": [
