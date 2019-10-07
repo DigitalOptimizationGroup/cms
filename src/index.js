@@ -76,3 +76,16 @@ export function registerRenderer(renderer) {
 
   __DOG_WORKER__.render = renderer;
 }
+
+export function getEdgeInfo(defaults = {}) {
+  if (isEdge) {
+    return { ...defaults, ...__DOG_WORKER__.edgeUserInfo };
+  } else if (
+    typeof window !== "undefined" &&
+    typeof window.__EDGE_USER_INFO__ === "object"
+  ) {
+    return { ...defaults, ...window.__EDGE_USER_INFO__ };
+  } else {
+    return defaults;
+  }
+}
