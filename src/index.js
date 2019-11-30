@@ -6,6 +6,8 @@ let selectedResolver;
 
 const LOGIN_TOKEN_PARAM_NAME = "dog_realtime_token";
 
+console.log("v.now.2");
+
 if (typeof __DOG_WORKER__ !== "undefined") {
   selectedResolver = ssr;
 }
@@ -67,7 +69,21 @@ export const connect = selectedResolver;
 
 export const isEdge = typeof __DOG_WORKER__ !== "undefined";
 
+export function registerRoot(id, renderer) {
+  console.log("registerRoot");
+
+  console.log("registerRoot: isEdge:", isEdge);
+  if (!isEdge) {
+    throw new Error(
+      "registerRoot should only be called when isEdge is true (when rendering at the Edge.)"
+    );
+  }
+
+  __DOG_WORKER__.roots.set(id, { id, renderer });
+}
+
 export function registerRenderer(renderer) {
+  console.log("registerRenderer");
   if (!isEdge) {
     throw new Error(
       "registerRenderer should only be called when isEdge is true (when rendering at the Edge.)"
@@ -87,5 +103,24 @@ export function getEdgeInfo(defaults = {}) {
     return { ...defaults, ...window.__EDGE_USER_INFO__ };
   } else {
     return defaults;
+  }
+}
+
+export function __EXPERIMENTAL__registerCacheLoader(loader) {
+  if (typeof __DOG_WORKER__ !== "undefined") {
+    __DOG_WORKER__.cacheLoaders.push(loader);
+  }
+}
+
+export function __EXPERIMENTAL__getFromCache(key) {
+  if (typeof __DOG_WORKER__ !== "undefined") {
+    const value = __DOG_WORKER__.userFilledCache[key];
+
+    // save value for client hydration
+    __DOG_WORKER__.ssrCache[key] = value;
+
+    return value;
+  } else if (typeof window !== "undefined") {
+    return window.__SSR_CACHE__ && window.__SSR_CACHE__[key];
   }
 }
