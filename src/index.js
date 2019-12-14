@@ -93,6 +93,7 @@ export function registerRenderer(renderer) {
   __DOG_WORKER__.render = renderer;
 }
 
+// TODO: remove this after we've migrated projects off of it, to edgeInfo prop
 export function getEdgeInfo(defaults = {}) {
   if (isEdge) {
     return { ...defaults, ...__DOG_WORKER__.edgeUserInfo };
@@ -105,6 +106,16 @@ export function getEdgeInfo(defaults = {}) {
     return defaults;
   }
 }
+
+export const edgeInfo = (() => {
+  if (isEdge) {
+    return __DOG_WORKER__.edgeUserInfo;
+  } else if (typeof window !== "undefined" && window.__EDGE_USER_INFO__) {
+    return window.__EDGE_USER_INFO__;
+  } else {
+    return {};
+  }
+})();
 
 export function __EXPERIMENTAL__registerCacheLoader(loader) {
   if (typeof __DOG_WORKER__ !== "undefined") {
